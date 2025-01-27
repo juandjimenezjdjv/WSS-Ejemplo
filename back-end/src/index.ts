@@ -12,6 +12,9 @@ import { CreateRoomHandler } from './businessLogic/CreateRoom.useCase';
 import { GeneralGroups, RequestsTopics } from './constants';
 import { PictochatUser } from './domain/user/user.model';
 
+// Routes
+import RoomsRoute from './routes/room.routes';
+
 const PORT = 8080;
 // const origin:
 
@@ -24,6 +27,9 @@ app.use(cors);
 
 // Startup
 Startup();
+
+app.use('/rooms', RoomsRoute);
+
 
 // Setup http server
 const httpServer = createServer(app);

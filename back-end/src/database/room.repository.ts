@@ -6,6 +6,10 @@ export class RoomRepository {
   public constructor() {
   }
 
+  public getRooms(): Room[] {
+    return RoomRepository._rooms;
+  }
+
   public getRoomByName(name: string): Room | undefined {
     return RoomRepository._rooms.find(room => room.name === name);
   }

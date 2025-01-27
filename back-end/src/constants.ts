@@ -9,3 +9,8 @@ export enum RequestsTopics {
 export enum GeneralGroups {
   GENERAL_NOTIFICATIONS = 'GENERAL_NOTIFICATIONS'
 }
+
+export enum TopicsToSend {
+  GENERAL_NOTIFICAITON = 'GENERAL_NOTIFICATION',
+  ROOM_CREATED = 'ROOM_CREATED'
+}
