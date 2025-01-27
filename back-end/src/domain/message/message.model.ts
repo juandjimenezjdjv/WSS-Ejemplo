@@ -5,5 +5,5 @@ export interface PictochatMessage {
   messageType: MessageType;
   content: string;
   sent: Date;
-  sentBy: PictochatUser;
+  sentBy?: PictochatUser;
 }

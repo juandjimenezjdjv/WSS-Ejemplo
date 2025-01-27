@@ -1,5 +1,4 @@
 export enum MessageType {
-    text = 'text',
-    image = 'image',
-    video = 'video'
+    direct_message = 'direct_message',
+    notification = 'group_notification',
 };

@@ -15,7 +15,7 @@ import { PictochatUser } from './domain/user/user.model';
 // Routes
 import RoomsRoute from './routes/room.routes';
 
-const PORT = 8080;
+const PORT = 3000;
 // const origin:
 
 const app: Express = express();
@@ -35,6 +35,7 @@ app.use('/rooms', RoomsRoute);
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
+    origin: '*',
     methods: ["GET", "POST"],
     allowedHeaders: ["*"],
     credentials: true
@@ -89,6 +90,10 @@ io.on('connection', (socket: Socket) => {
       username: newMessage.userId
     });
   });
+
+  socket.on('GENERAL_NOTIFICATION', () => {
+    socket.broadcast.emit('HOLA MUNDO');
+  })
 });
 
 httpServer.listen(PORT, () => {
