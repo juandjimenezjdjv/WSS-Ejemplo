@@ -1,0 +1,7 @@
+export enum RequestsTopics {
+  ASSIGN_USER = 'ASSIGN_USER',
+  JOIN_ROOM = 'JOIN_ROOM',
+  CREATE_ROOM = 'CREATE_ROOM',
+  LEAVE_ROOM = 'LEAVE_ROOM',
+  NEW_MESSAGE = 'NEW_MESSAGE'
+}
