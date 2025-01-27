@@ -45,6 +45,7 @@ io.on('connection', (socket: Socket) => {
   const { id } = socket;
 
   console.log(`Connected ${id}`);
+  console.log('Este es el cambio del branch 0');
   socket.join(GeneralGroups.GENERAL_NOTIFICATIONS);
 
 
