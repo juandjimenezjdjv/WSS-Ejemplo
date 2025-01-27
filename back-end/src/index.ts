@@ -73,7 +73,8 @@ io.on('connection', (socket: Socket) => {
 
   socket.on(RequestsTopics.LEAVE_ROOM, (leaveRequest) => {
     const userRepository = new UserRepository();
-    const leaveRoomHandler = new LeaveRoomHandler(socket, userRepository);
+    const roomRepository = new RoomRepository();
+    const leaveRoomHandler = new LeaveRoomHandler(socket, userRepository, roomRepository);
 
     leaveRoomHandler.handle({ username: leaveRequest.username });
   });
