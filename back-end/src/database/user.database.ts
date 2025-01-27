@@ -9,6 +9,10 @@ export class UserRepository {
     UserRepository._db.push(user);
   }
 
+  public getUsers(): PictochatUser[] {
+    return UserRepository._db;
+  }
+
   public getUserByCriteria(criteria: (user: PictochatUser) => boolean): PictochatUser | undefined {
     return UserRepository._db.find(criteria);
   }

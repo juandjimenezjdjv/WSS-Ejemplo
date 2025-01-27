@@ -9,7 +9,7 @@ import { SendMessageUseCase } from './businessLogic/SendMessage.useCase';
 import { JoinRoomHandler } from './businessLogic/JoinRoom.useCase';
 import { LeaveRoomHandler } from './businessLogic/LeaveRoom.useCase';
 import { CreateRoomHandler } from './businessLogic/CreateRoom.useCase';
-import { RequestsTopics } from './constants';
+import { GeneralGroups, RequestsTopics } from './constants';
 import { PictochatUser } from './domain/user/user.model';
 
 const PORT = 8080;
@@ -38,7 +38,7 @@ io.on('connection', (socket: Socket) => {
   const { id } = socket;
 
   console.log(`Connected ${id}`);
-  socket.join('GeneralNotifications');
+  socket.join(GeneralGroups.GENERAL_NOTIFICATIONS);
 
 
   socket.on(RequestsTopics.ASSIGN_USER, (createUserRequest) => {

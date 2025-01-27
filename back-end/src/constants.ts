@@ -5,3 +5,7 @@ export enum RequestsTopics {
   LEAVE_ROOM = 'LEAVE_ROOM',
   NEW_MESSAGE = 'NEW_MESSAGE'
 }
+
+export enum GeneralGroups {
+  GENERAL_NOTIFICATIONS = 'GENERAL_NOTIFICATIONS'
+}
