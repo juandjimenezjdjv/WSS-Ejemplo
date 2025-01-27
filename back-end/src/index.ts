@@ -64,10 +64,10 @@ io.on('connection', (socket: Socket) => {
     createRoomHandler.handle({ name: JSON.parse(createRoomRequest).name });
   });
 
-  socket.on(RequestsTopics.JOIN_ROOM, (roomRequest) => {
+  socket.on(RequestsTopics.JOIN_ROOM, (roomRequeststr) => {
     const userRepository = new UserRepository();
     const joinRoomHandler = new JoinRoomHandler(socket, userRepository);
-    
+    const roomRequest = JSON.parse(roomRequeststr);
     joinRoomHandler.handle({ room: roomRequest.room, username: roomRequest.username });
   });
 

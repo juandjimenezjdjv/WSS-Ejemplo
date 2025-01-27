@@ -17,8 +17,27 @@ export class JoinRoomHandler {
   ) { }
 
   public handle(command: JoinRoomCommand): JoinRoomResult {
-    // Implement
+    console.log('JoinRoomHandler', command)
+    if (!command.username || !command.room) {
+      return { success: false };
+    }
 
-    return { success: false };
+    const user = this._userRepository.getUsers().find((user) => user.username === command.username);
+    if (!user) {
+      return { success: false };
+    }
+
+    try {
+      this._socket.join(command.room)
+      console.log('User joined room', command.room)
+
+      this._socket.to(command.room).emit('NEW_MESSAGES', {message: 'User has joined the room', username: command.username})
+      return { success: false };
+    } catch (error) {
+      console.error(error);
+      return { success: false };
+    }
+
+
   }
 }
