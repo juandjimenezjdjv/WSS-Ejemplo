@@ -15,9 +15,11 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
-  rooms$!: Observable<Room[]>;
-  currentRoom?: Room;
+  title = 'wss-test-2';
 
+  rooms$!: Observable<Room[]>;
+
+  currentRoom?: Room;
   notifications: { message: string, date: Date }[] = []
 
   public constructor(
@@ -30,7 +32,6 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
 
   }
-
 
   public onSelectRoom(room: Room) {
     this.currentRoom = this.currentRoom === undefined || this.currentRoom.name !== room.name
@@ -49,6 +50,4 @@ export class AppComponent implements OnInit {
     this.socketService.connect();
   }
 
-
-  title = 'wss-test-2';
 }

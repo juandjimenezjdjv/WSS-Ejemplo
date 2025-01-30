@@ -22,11 +22,6 @@ export class JoinRoomHandler {
       return { success: false };
     }
 
-    const user = this._userRepository.getUsers().find((user) => user.username === command.username);
-    if (!user) {
-      return { success: false };
-    }
-
     try {
       this._socket.join(command.room)
       console.log('User joined room', command.room)

@@ -21,6 +21,7 @@ export class CreateRoomHandler {
   public handle(command: CreateRoomCommand): CreateRoomResult {
     // Extract the name from the command
     const { name } = command;
+    
     // Get the existing room names
     const existingRooms = this._roomRepository
       .getRooms()
@@ -47,12 +48,12 @@ export class CreateRoomHandler {
     this._roomRepository.addRoom(room);
 
     // Notify the client that the room was created
-    this._socket.emit(TopicsToSend.GENERAL_NOTIFICAITON, {
-      message: `Room created: ${room.name}`,
-      date: new Date(),
-    });
+    // this._socket.emit(TopicsToSend.GENERAL_NOTIFICAITON, {
+    //   message: `Room created: ${room.name}`,
+    //   date: new Date(),
+    // });
 
-    this._socket.emit(TopicsToSend.ROOM_CREATED, room);
+    this._socket.broadcast.emit(TopicsToSend.ROOM_CREATED, room);
     return { room };
   }
 }

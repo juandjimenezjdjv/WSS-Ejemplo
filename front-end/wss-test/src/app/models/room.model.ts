@@ -17,6 +17,7 @@ export interface PictochatMessage {
   sentBy?: PictochatUser;
 }
 
+
 export interface Room {
     name: string;
     numberOfParticipants: number;
