@@ -79,7 +79,7 @@
                 <span class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center">
                   {{ item.sentBy?.username?.charAt(0) }}
                 </span>
-                <span class="font-semibold text-blue-800">{{ item.sentBy?.username }}</span>
+                <span class="font-semibold text-blue-800 flex-grow">{{ item.sentBy?.username }}</span>
                 <span class="text-xs text-gray-500">{{ item.sent | date:'shortTime' }}</span>
               </div>
               <p class="text-gray-800 ml-8">{{ item.content }}</p>
