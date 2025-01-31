@@ -1,6 +1,8 @@
 import { Socket } from "socket.io";
 import { UserRepository } from "../database/user.database";
 import { RoomRepository } from "../database/room.repository";
+import { PictochatMessage } from "../domain/message/message.model";
+import { MessageType } from "../domain/message/messageType.enum";
 
 export type LeaveRoomCommand = {
   username: string;
@@ -19,23 +21,20 @@ export class LeaveRoomHandler {
   }
 
   public handle(command: LeaveRoomCommand): LeaveRoomResult {
-    // TODO: implement
-    const { username }  = command;
     
     //Obtener usuario
-    const user = this._userRepository.getUserByCriteria(
-      (user) => user.username === username
-    );
+    const user = this._userRepository.getUsers().find((user) => user.username === command.username);
+    if (!user) {
+      return { success: false };
+    }
 
-    //Validar el usuario exista
-    if (!user || !user.currentRoom){ 
+    if (!user.currentRoom){ 
       return { success: false };
     }
 
     //Obtener la sala
     const room = this._roomRepository.getRoomByName(user.currentRoom!);
 
-    
     // Validar que la room exista
     if (!room){
       return { success: false };
@@ -50,8 +49,17 @@ export class LeaveRoomHandler {
     //Actualizar el usuario
     user.currentRoom = undefined;
 
+    const message: PictochatMessage = {
+      messageType: MessageType.notification,
+      content: `${user.username} ha salido de la sala`,
+      sent: new Date()
+    };
+
+    room.messageHistory.push(message)
+
     //Mandar el mensaje de que alguien un usuario ha salido
-    this._socket.to(user.currentRoom!).emit('USER_LEFT', user.username);
+    this._socket.broadcast.emit('USER_LEFT', {message: `Un usuario ha salido de la sala ${room}: `, username: user.username});
+    console.log('User left room', room)
     return { success: true };
   }
 }

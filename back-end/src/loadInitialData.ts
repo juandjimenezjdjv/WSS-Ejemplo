@@ -1,3 +1,4 @@
+import { UserRepository } from './database/user.database';
 import { RoomRepository } from "./database/room.repository";
 import { MessageType } from "./domain/message/messageType.enum";
 
@@ -50,4 +51,12 @@ export function Startup() {
       }
     ],
   });
+
+  const userRepository = new UserRepository()
+  userRepository.addUser({
+    socketId: 'user 1 socket id',
+    username: 'user 1',
+    // currentRoom: 'A'
+  })
+
 };

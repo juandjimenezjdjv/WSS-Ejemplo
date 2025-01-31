@@ -17,20 +17,34 @@ import { MatButtonModule } from '@angular/material/button';
 export class AppComponent implements OnInit {
   title = 'wss-test-2';
 
-  rooms$!: Observable<Room[]>;
+  rooms$!: Room[];
 
   currentRoom?: Room;
   notifications: { message: string, date: Date }[] = []
+
+  public MessageType = MessageType
 
   public constructor(
     private readonly socketService: SocketServiceService,
     private readonly _roomService: RoomServiceService
   ) {
-    this.rooms$ = _roomService.getRooms();
+    this.reloadRooms()
+  }
+
+  reloadRooms(): void {
+    this._roomService.getRooms().subscribe(rooms => {
+      this.rooms$ = rooms
+
+      if (this.currentRoom){
+        this.currentRoom = rooms.find((room) => room.name === this.currentRoom?.name)
+      }
+
+    });
   }
 
   ngOnInit(): void {
-
+    // Conectar al servidor de Socket.IO
+    
   }
 
   public onSelectRoom(room: Room) {
@@ -40,14 +54,50 @@ export class AppComponent implements OnInit {
   }
 
   public getMessageClass(message: PictochatMessage) {
+    
     if (message.messageType === MessageType.notification) {
       return ['justify-center rounded-full bg-slate-100'];
+    }
+
+    if (message.messageType === MessageType.direct_message) {
+      return ['justify-center rounded-md bg-slate-100'];
     }
     return [];
   }
 
   public connect() {
     this.socketService.connect();
+
+    // Suscribirse al evento de notificación general
+    this.socketService._newNotification
+      .subscribe((notification: { message: string, date: Date }) => {
+        this.notifications.push(notification);
+      });
+
+    // Suscribirse al evento de nueva sala creada
+    this.socketService._roomCreated
+      .subscribe((room: Room) => {
+        this.reloadRooms()
+      });
+
+    // Suscribirse al evento de nuevo mensaje en un grupo
+    this.socketService._newMessage
+      .subscribe((message: PictochatMessage) => {
+        this.reloadRooms()
+      });
+
+    // Suscribirse al evento de UNIRSE
+    this.socketService._joinRoom
+      .subscribe((message: PictochatMessage) => {
+        this.reloadRooms()
+      });
+
+    // Suscribirse al evento de SALIRSE
+    this.socketService._leaveRoom
+      .subscribe((message: PictochatMessage) => {
+        this.reloadRooms()
+      });
+
   }
 
 }

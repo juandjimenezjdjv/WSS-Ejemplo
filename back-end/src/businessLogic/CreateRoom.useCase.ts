@@ -48,10 +48,16 @@ export class CreateRoomHandler {
     this._roomRepository.addRoom(room);
 
     // Notify the client that the room was created
-    // this._socket.emit(TopicsToSend.GENERAL_NOTIFICAITON, {
-    //   message: `Room created: ${room.name}`,
-    //   date: new Date(),
-    // });
+    this._socket.broadcast.emit(TopicsToSend.GENERAL_NOTIFICAITON, {
+      message: `Se creó la sala ${room.name}.`,
+      date: new Date(),
+    });
+
+    // this._roomRepository.getRoomByName("A")?.messageHistory.push({
+    //   content: `Se creó la sala ${name}`,
+    //   messageType: MessageType.notification,
+    //   sent: new Date(),
+    // })
 
     this._socket.broadcast.emit(TopicsToSend.ROOM_CREATED, room);
     return { room };

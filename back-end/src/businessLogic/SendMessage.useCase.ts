@@ -2,6 +2,7 @@ import { UserRepository} from './../database/user.database';
 import { Socket } from "socket.io";
 import { PictochatMessage } from "../domain/message/message.model";
 import { MessageType } from "../domain/message/messageType.enum";
+import { RoomRepository } from '../database/room.repository';
 
 export type SendMessageCommand = {
   content: string;
@@ -24,17 +25,33 @@ export class SendMessageUseCase {
   }
 
   public handle(command: SendMessageCommand): SendMessageResult {
+
+    // console.log(command)
+
+    // console.log(this.userRepository.getUsers())
+
     const user = this.userRepository.getUsers().find((user) => user.username === command.username);
     if (!user) {
-      throw new Error('User not found');
+      return { success: false };
     }
+    if (!user.currentRoom) {
+      return { success: false };
+    }
+
     const message: PictochatMessage = {
       messageType: MessageType.direct_message,
       content: command.content,
       sent: new Date(),
       sentBy: user
     };
-    this.socket.to(user.currentRoom??"").emit('NEW_MESSAGE', message);
+  
+    console.log(message)
+
+    new RoomRepository().getRoomByName(user.currentRoom??"")?.messageHistory.push(
+      message
+    )
+
+    this.socket.broadcast.emit('NEW_MESSAGE', message);
     return { success: true };
   }
 }

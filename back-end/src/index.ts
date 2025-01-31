@@ -76,20 +76,23 @@ io.on('connection', (socket: Socket) => {
     const roomRepository = new RoomRepository();
     const leaveRoomHandler = new LeaveRoomHandler(socket, userRepository, roomRepository);
 
-    leaveRoomHandler.handle({ username: leaveRequest.username });
+    leaveRoomHandler.handle({ username: JSON.parse(leaveRequest).username });
   });
 
   socket.on(RequestsTopics.NEW_MESSAGE, (newMessage) => {
-    const userRepository = new UserRepository();
-    const newMessageUseCase: SendMessageUseCase = new SendMessageUseCase(
-      socket,
-      userRepository
-    );
+    // console.log("Mensaje recibido:", newMessage);
 
-    newMessageUseCase.handle({
-      content: newMessage.content,
-      username: newMessage.userId
-    });
+    const userRepository = new UserRepository();
+    const newMessageUseCase = new SendMessageUseCase(socket, userRepository);
+
+    try {
+      newMessageUseCase.handle({
+        content: JSON.parse(newMessage).content,
+        username: JSON.parse(newMessage).username,
+      });
+    } catch (error) {
+      console.error("Error handling NEW_MESSAGE:", error);
+    }
   });
 
   socket.on('GENERAL_NOTIFICATION', () => {
