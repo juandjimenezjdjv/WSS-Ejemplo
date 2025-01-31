@@ -53,4 +53,50 @@ export class SocketServiceService {
     }
   }
 
+  public assignUser(username: string) {
+      if (!this.io) {
+        throw new Error('Socket no inicializado');
+      }
+      this.io.emit("ASSIGN_USER", JSON.stringify({ username: username }));
+  }
+
+  public sendMessage(content: string, username: string) {
+      if (!this.io) {
+          throw new Error('Socket no inicializado');
+      }
+      console.log('Enviando')
+      this.io.emit("NEW_MESSAGE", JSON.stringify({ 
+          content: content, 
+          username: username 
+      }));
+  }
+
+  public joinRoom(room: string, username: string) {
+      if (!this.io) {
+          throw new Error('Socket no inicializado');
+      }
+      this.io.emit("JOIN_ROOM", JSON.stringify({ 
+          room: room,
+          username: username 
+      }));
+  }
+
+  public leaveRoom(username: string) {
+      if (!this.io) {
+          throw new Error('Socket no inicializado');
+      }
+      this.io.emit("LEAVE_ROOM", JSON.stringify({ 
+          username: username 
+      }));
+  }
+
+  public createRoom(name: string) {
+      if (!this.io) {
+          throw new Error('Socket no inicializado');
+      }
+      this.io.emit("CREATE_ROOM", JSON.stringify({ 
+          name: name 
+      }));
+  }
+
 }

@@ -6,11 +6,12 @@ import { RoomServiceService } from './services/room-service.service';
 import { Observable, of } from 'rxjs';
 import { MessageType, PictochatMessage, Room } from './models/room.model';
 import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, MatButtonModule],
+  imports: [CommonModule, RouterOutlet, MatButtonModule, FormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -21,6 +22,13 @@ export class AppComponent implements OnInit {
 
   currentRoom?: Room;
   notifications: { message: string, date: Date }[] = []
+
+  username: string = '';
+  registered: boolean = false;
+
+  message: string = '';
+
+  roomToCreate: string = '';
 
   public MessageType = MessageType
 
@@ -43,14 +51,22 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Conectar al servidor de Socket.IO
     
   }
 
   public onSelectRoom(room: Room) {
+
+    if (this.currentRoom)
+      if (this.currentRoom.name === room.name)
+        return
+
+    this.socketService.leaveRoom(this.username)
+
     this.currentRoom = this.currentRoom === undefined || this.currentRoom.name !== room.name
       ? room
       : undefined;
+
+    this.socketService.joinRoom(room.name, this.username)
   }
 
   public getMessageClass(message: PictochatMessage) {
@@ -65,8 +81,32 @@ export class AppComponent implements OnInit {
     return [];
   }
 
+  public sendMessage() {
+    if (this.message != "") {
+      this.socketService.sendMessage(this.message, this.username)
+      this.message = ""
+    }
+  }
+
+  public createRoom() {
+    if (this.roomToCreate != "") {
+      this.socketService.createRoom(this.roomToCreate)
+      this.roomToCreate = ""
+    }
+  }
+
+  public registerUser() {
+    if (this.username != "") {
+      this.registered = true
+      this.connect()
+    }
+  }
+
   public connect() {
     this.socketService.connect();
+
+    // Loguearse
+    this.socketService.assignUser(this.username);
 
     // Suscribirse al evento de notificación general
     this.socketService._newNotification

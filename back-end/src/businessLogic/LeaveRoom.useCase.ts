@@ -59,6 +59,7 @@ export class LeaveRoomHandler {
 
     //Mandar el mensaje de que alguien un usuario ha salido
     this._socket.broadcast.emit('USER_LEFT', {message: `Un usuario ha salido de la sala ${room}: `, username: user.username});
+    this._socket.emit('USER_LEFT', {message: `Un usuario ha salido de la sala ${room}: `, username: user.username});
     console.log('User left room', room)
     return { success: true };
   }

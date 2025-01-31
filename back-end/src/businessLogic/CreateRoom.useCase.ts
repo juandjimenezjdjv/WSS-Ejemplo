@@ -53,6 +53,11 @@ export class CreateRoomHandler {
       date: new Date(),
     });
 
+    this._socket.emit(TopicsToSend.GENERAL_NOTIFICAITON, {
+      message: `Se creó la sala ${room.name}.`,
+      date: new Date(),
+    });
+
     // this._roomRepository.getRoomByName("A")?.messageHistory.push({
     //   content: `Se creó la sala ${name}`,
     //   messageType: MessageType.notification,
@@ -60,6 +65,7 @@ export class CreateRoomHandler {
     // })
 
     this._socket.broadcast.emit(TopicsToSend.ROOM_CREATED, room);
+    this._socket.emit(TopicsToSend.ROOM_CREATED, room);
     return { room };
   }
 }

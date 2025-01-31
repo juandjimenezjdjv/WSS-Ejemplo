@@ -52,6 +52,7 @@ export class SendMessageUseCase {
     )
 
     this.socket.broadcast.emit('NEW_MESSAGE', message);
+    this.socket.emit('NEW_MESSAGE', message);
     return { success: true };
   }
 }

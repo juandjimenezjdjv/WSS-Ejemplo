@@ -55,7 +55,8 @@ export class JoinRoomHandler {
 
       room.messageHistory.push(message)
       this._socket.broadcast.emit('USER_JOINED', {message: `Un usuario se ha unido a la sala ${command.room}: `, username: command.username});
-      
+      this._socket.emit('USER_JOINED', {message: `Un usuario se ha unido a la sala ${command.room}: `, username: command.username});
+
       console.log('User joined room', command.room)
       return { success: true };
       
